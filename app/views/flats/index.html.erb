@@ -1,0 +1,83 @@
+<script src="//maps.googleapis.com/maps/api/js?v=3.13&amp;sensor=false&amp;libraries=geometry" type="text/javascript"></script>
+<script src='//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.1.2/src/markerclusterer_packed.js' type='text/javascript'></script>
+
+<div class="full-width">
+    <header><%= render 'search_form' %></header>
+</div>
+<div class="full-width">
+    <div class="large-5 columns" role="content">
+        <div>
+            <div id="gmap" style='height: 800px'></div>
+        </div>
+        <script type="text/javascript" charset="utf-8">
+
+            function toggleBounce(elem) {
+                var id = $(elem.currentTarget).parent().parent().data('id');
+                var result = $.grep(addedmarkers, function (e) {
+                    return e.serviceObject.id == id;
+                });
+                if (result) {
+                    var marker = result[0].getServiceObject();
+                    if (marker.getAnimation() != null) {
+                        marker.setAnimation(null);
+                    } else {
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                    }
+                }
+            }
+            $(document).ready(function () {
+                handler = Gmaps.build('Google');
+
+                handler.buildMap({
+                            internal: {
+                                id: 'gmap'
+                            }
+                        },
+                        function () {
+                            markers = <%=raw @hash.to_json%>;
+
+                            addedmarkers = markers.map(function (m) {
+                                marker = handler.addMarker(m);
+                                marker.serviceObject.set('id', m.id); // You can add other attributes using set
+                                var id = marker.getServiceObject().id;
+                                google.maps.event.addListener(marker.getServiceObject(), 'mouseover', function () {
+                                    $('#flat-details-' + id).toggleClass('selected')
+                                });
+                                google.maps.event.addListener(marker.getServiceObject(), 'mouseout', function () {
+                                    $('#flat-details-' + id).toggleClass('selected')
+                                });
+                                return marker;
+                            });
+                            $('.flat-details img').on('mouseout mouseover', toggleBounce);
+                            handler.bounds.extendWith(addedmarkers);
+                            handler.fitMapToBounds();
+                        }
+                );
+
+            })
+        </script>
+        <br>
+    </div>
+
+    <div class="large-7 columns">
+        <ul class="small-block-grid-3">
+            <% @flats.each do |flat| %>
+                <li class="flat-details" id="flat-details-<%= flat.id %>" data-id="<%= flat.id %>">
+                    <% if flat.images.empty? %>
+                        <%= link_to image_tag("http://placehold.it/644x461"), flat %>
+                    <% else %>
+                        <%= link_to image_tag(flat.images[0], size: '644x461'), flat, {"data-reveal-id" => "myModal", "data-reveal-ajax" => "true"} %>
+                    <% end %>
+                    <%= '~' if flat.negotiate %>
+                    <%= '&#10003;'.html_safe if flat.full_price %>
+                    <%= flat.price %>
+                </li>
+            <% end %>
+        </ul>
+        <%= paginate @flats %>
+    </div>
+</div>
+
+<div id="myModal" class="reveal-modal" data-reveal>
+    <a class="close-reveal-modal">&#215;</a>
+</div>

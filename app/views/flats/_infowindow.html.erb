@@ -1,0 +1,33 @@
+<% if false %>
+
+<% if flat.images.empty? %>
+
+<% else %>
+    <ul id="orbit" data-orbit>
+        <% flat.images.each do |image| %>
+            <li><%= image_tag image %></li>
+        <% end %>
+    </ul>
+<% end %>
+<% end %>
+<%= image_tag flat.images[0] %>
+<%= link_to flat.price, flat %>
+<%= link_to flat.title, flat.url, title: flat.desc %>
+<table>
+    <tr>
+        <td>from</td>
+        <td><%= flat.from %></td>
+    </tr>
+    <tr>
+        <td>lvl</td>
+        <td><%= flat.try(:lvl) %></td>
+    </tr>
+    <tr>
+        <td>area</td>
+        <td><%= flat.area %></td>
+    </tr>
+    <tr>
+        <td>room</td>
+        <td><%= flat.rooms %></td>
+    </tr>
+</table>

@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+<h3><%= @flat.price %></h3>
+<p>
+    <strong>Address:</strong>
+    <%= @flat.address %>
+</p>
+
+<p>
+    <strong>Desc:</strong>
+    <%= @flat.desc.html_safe %>
+</p>
+<p>
+    <strong>Rooms:</strong>
+    <%= @flat.rooms %>
+</p>
+<p>
+    <strong>lvl:</strong>
+    <%= @flat.try :lvl %>
+</p>
+
+<%= link_to 'Edit', edit_flat_path(@flat) %> |
+<td><%= link_to 'Destroy', @flat, method: :delete, data: {confirm: 'Are you sure?'} %></td> |
+<%= link_to 'Back', :back %>
+<hr/>
+<% @flat.images.each do |image| %>
+    <%= image_tag image, width: 300 %>
+<% end %>

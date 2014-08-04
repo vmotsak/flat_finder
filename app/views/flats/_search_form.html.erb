@@ -1,0 +1,20 @@
+<%= form_for(@flats_search, url: '', method: :get) do |f| %>
+    <div class="row">
+        <div class="small-3 columns">
+            <%= f.check_box :from, {}, 'Osoby prywatnej' %>
+            <%= f.label :from, 'Only private', class: 'inline' %>
+        </div>
+        <div class="small-3 columns">
+            <%= f.check_box :images %>
+            <%= f.label :images, 'Pictures', class: 'inline' %><br>
+        </div>
+        <div class="small-1 columns">
+            <%= f.label :lvl, 'Floor >', class: 'inline' %>
+        </div>
+        <div class="small-2 columns">
+            <%= f.text_field :lvl %>
+        </div>
+        <div class="small-3 columns"><%= button_tag 'Filter' %></div>
+    </div>
+<% end %>
+
